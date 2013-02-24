@@ -51,3 +51,32 @@ channels into array; Play last array."
         (loop :repeat (round (* time-in-seconds +sample-rate+)
                              +frames-per-buffer+)
               :do (write-stream astream a))))))
+
+(defun play-samples (samples)
+    (with-audio
+      (with-default-audio-stream (astream +num-channels+ +num-channels+
+                                  :sample-format +sample-format+
+                                  :sample-rate +sample-rate+
+                                  :frames-per-buffer +frames-per-buffer+)
+        (dolist (sample samples)
+          (write-stream astream sample)))))
+
+(defun record-microphone (time-in-seconds)
+  (with-audio
+    (with-default-audio-stream (astream +num-channels+ +num-channels+
+                                :sample-format +sample-format+
+                                :sample-rate +sample-rate+
+                                :frames-per-buffer +frames-per-buffer+)
+      (loop :repeat (round (* time-in-seconds +sample-rate+)
+                           +frames-per-buffer+)
+            :collect (read-stream astream)))))
+
+(defun echo-for (time-in-seconds)
+  (format t "RECORDING...~%")
+  (force-output)
+  (let ((samples (record-microphone time-in-seconds)))
+    (format t "DONE.~%PLAYING...~%")
+    (force-output)
+    (play-samples samples)
+    (format t "DONE.~%")
+    (force-output)))
