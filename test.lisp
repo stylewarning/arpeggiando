@@ -10,7 +10,7 @@
 ;; separate-array-to-channels
 ;; merge-channels-into-array
 
-(defun play-samples (samples)
+(defun play-frame-buffers (samples)
     (with-audio
       (with-default-audio-stream (astream +num-channels+ +num-channels+
                                   :sample-format +sample-format+
@@ -30,11 +30,22 @@
             :collect (read-stream astream)))))
 
 (defun echo-for (time-in-seconds)
-  (format t "RECORDING...~%")
+  (format t ";;; RECORDING...~%")
   (force-output)
-  (let ((samples (record-microphone time-in-seconds)))
-    (format t "DONE.~%PLAYING...~%")
+  (let ((buffers (record-microphone time-in-seconds)))
+    (format t ";;; DONE.~%;;; PLAYING...~%")
     (force-output)
-    (play-samples samples)
-    (format t "DONE.~%")
+    (play-frame-buffers buffers)
+    (format t ";;; DONE.~%")
     (force-output)))
+
+(defun write-buffers-to-file (filename frame-buffers)
+  (with-open-file (stream filename :direction :output
+                                   :if-exists :supersede
+                                   :if-does-not-exist :create)
+    (dolist (buffer frame-buffers)
+      (loop :for sample :across buffer
+            :do (progn 
+                  (princ sample stream)
+                  (terpri stream)))))
+  filename)
