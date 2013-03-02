@@ -11,8 +11,9 @@
 ;; merge-channels-into-array
 
 (defun play-frame-buffers (samples)
-    (with-audio
-      (with-default-audio-stream (astream +num-channels+ +num-channels+
+  (with-audio
+      (with-default-audio-stream (astream
+                                  +num-channels+ +num-channels+
                                   :sample-format +sample-format+
                                   :sample-rate +sample-rate+
                                   :frames-per-buffer +frames-per-buffer+)
@@ -21,7 +22,8 @@
 
 (defun record-microphone (time-in-seconds)
   (with-audio
-    (with-default-audio-stream (astream +num-channels+ +num-channels+
+    (with-default-audio-stream (astream
+                                +num-channels+ +num-channels+
                                 :sample-format +sample-format+
                                 :sample-rate +sample-rate+
                                 :frames-per-buffer +frames-per-buffer+)
