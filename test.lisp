@@ -7,6 +7,8 @@
 (defparameter +sample-format+ :float)
 (defparameter +num-channels+ 2)
 
+(defvar *console* (iolib.trivial-sockets:open-stream "127.0.0.1" 6007))
+
 ;; separate-array-to-channels
 ;; merge-channels-into-array
 
@@ -29,7 +31,8 @@
                                 :frames-per-buffer +frames-per-buffer+)
       (loop :repeat (round (* time-in-seconds +sample-rate+)
                            +frames-per-buffer+)
-            :collect (read-stream astream)))))
+            :for sample := (read-stream astream)
+            :collect sample))))
 
 (defun echo-for (time-in-seconds)
   (format t ";;; RECORDING...~%")
