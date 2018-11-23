@@ -12,5 +12,5 @@
   :license "Richard Stallman License"
   :components ((:file "package")
                (:file "arpeggiando"))
-  :depends-on ("cl-portaudio" "iolib.trivial-sockets"))
+  :depends-on ("cl-portaudio" "iolib/trivial-sockets"))
 
